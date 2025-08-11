@@ -4,6 +4,7 @@ import '../repositories/currency_repository.dart';
 
 class CurrencyViewModel extends ChangeNotifier {
   final CurrencyRepository repository;
+  String? errorMessage;
 
   List<CurrencyModel> currencies = [];
   String? fromCurrency;
@@ -28,6 +29,7 @@ class CurrencyViewModel extends ChangeNotifier {
 
   Future<void> loadCurrencies() async {
     isLoading = true;
+    errorMessage = null;
     notifyListeners();
 
     try {
@@ -43,15 +45,22 @@ class CurrencyViewModel extends ChangeNotifier {
   Future<void> convert() async {
     if (fromCurrency == null || toCurrency == null || amount <= 0) return;
 
+    errorMessage = null;
+    notifyListeners();
+
     try {
       final rateModel = await repository.getRates(fromCurrency!);
       final rate = rateModel.rates[toCurrency!];
       if (rate != null) {
         result = amount * rate;
         notifyListeners();
+      } else {
+        errorMessage = "Conversion rate not found";
+        notifyListeners();
       }
     } catch (e) {
-      debugPrint("Error converting currency: $e");
+      errorMessage = "Error converting currency: $e";
+      notifyListeners();
     }
   }
 }

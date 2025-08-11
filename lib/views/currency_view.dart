@@ -103,6 +103,17 @@ class _CurrencyViewState extends State<CurrencyView> {
   @override
   Widget build(BuildContext context) {
     final vm = Provider.of<CurrencyViewModel>(context);
+    if (vm.errorMessage != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(vm.errorMessage!),
+            backgroundColor: Colors.red,
+          ),
+        );
+        vm.errorMessage = null;  // Reset lỗi sau khi hiển thị
+      });
+    }
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -110,7 +121,7 @@ class _CurrencyViewState extends State<CurrencyView> {
           ? const Center(
         child: CircularProgressIndicator(color: Colors.indigo),
       )
-          : Padding(
+          :  Padding(
         padding: const EdgeInsets.all(20),
         child: Form(
           key: _formKey,
