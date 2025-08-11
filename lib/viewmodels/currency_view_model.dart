@@ -22,8 +22,8 @@ class CurrencyViewModel extends ChangeNotifier {
   }
 
   void convertCurrency(dynamic amount) {
-      amount = double.parse(amount);
-      convert();
+    this.amount = double.parse(amount.toString());
+    convert();
   }
   CurrencyViewModel(this.repository);
 

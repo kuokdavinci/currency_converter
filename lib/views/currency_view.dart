@@ -111,7 +111,7 @@ class _CurrencyViewState extends State<CurrencyView> {
             backgroundColor: Colors.red,
           ),
         );
-        vm.errorMessage = null;  // Reset lỗi sau khi hiển thị
+        vm.errorMessage = null;
       });
     }
 
