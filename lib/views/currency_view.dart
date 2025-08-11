@@ -28,22 +28,6 @@ class _CurrencyViewState extends State<CurrencyView> {
     });
   }
 
-  void _swapCurrencies(CurrencyViewModel vm) {
-    if (_formKey.currentState!.validate()) {
-      final temp = vm.fromCurrency;
-      vm.fromCurrency = vm.toCurrency;
-      vm.toCurrency = temp;
-      vm.notifyListeners();
-      vm.convert();
-    }
-  }
-
-  void _convertCurrency(CurrencyViewModel vm) {
-    if (_formKey.currentState!.validate()) {
-      vm.amount = double.parse(_amountController.text);
-      vm.convert();
-    }
-  }
 
   Future<void> _showCurrencyPicker(
       BuildContext context, bool isFrom, CurrencyViewModel vm) async {
@@ -161,7 +145,8 @@ class _CurrencyViewState extends State<CurrencyView> {
                   ),
                   const SizedBox(width: 8),
                   IconButton(
-                    onPressed: () => _swapCurrencies(vm),
+                    onPressed: (){ if (_formKey.currentState!.validate())
+                      vm.swapCurrencies();},
                     icon: const Icon(Icons.swap_horiz,
                         color: Colors.indigo, size: 28),
                     tooltip: "Swap currencies",
@@ -186,7 +171,7 @@ class _CurrencyViewState extends State<CurrencyView> {
                 ],
               ),
 
-              const SizedBox(height: 20),
+              const SizedBox(height: 40),
               /// Row amount + result
               Row(
                 children: [
@@ -202,9 +187,9 @@ class _CurrencyViewState extends State<CurrencyView> {
                             borderRadius: BorderRadius.circular(8),
                           ),
                           contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 10, vertical: 10),
+                              horizontal: 15, vertical: 10),
                         ),
-                        validator: validateAmount,
+                        // validator: validateAmount,
                         onChanged: (val) {
                           vm.amount = double.tryParse(val) ?? 0;
                         },
@@ -238,16 +223,24 @@ class _CurrencyViewState extends State<CurrencyView> {
                 ],
               ),
 
-              const SizedBox(height: 20),
+              const SizedBox(height: 40),
 
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.indigo,
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 40, vertical: 15)),
-                onPressed: () => _convertCurrency(vm),
-                child: const Text("Convert"),
+              SizedBox(
+                height: 50,
+                width: 300,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.indigo,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 40, vertical: 15)),
+                  onPressed: () {(_formKey.currentState!.validate()&& validateAmount(_amountController.text)== null) ? vm.convertCurrency(_amountController.text): ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content:Text("Please enter valid amount!"),
+                    backgroundColor: Colors.red,
+                    ));},
+                  child: const Text("Convert"),
+                ),
               ),
             ],
           ),

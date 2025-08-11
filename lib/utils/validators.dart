@@ -1,10 +1,10 @@
 String? validateAmount(String? value) {
   if (value == null || value.trim().isEmpty) {
-    return "Please enter amount";
+    return "Please enter number";
   }
   final number = double.tryParse(value);
   if (number == null || number <= 0) {
-    return "Enter a valid number";
+    return "Please enter positive number";
   }
   return null;
 }

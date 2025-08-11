@@ -12,6 +12,18 @@ class CurrencyViewModel extends ChangeNotifier {
   double? result;
   bool isLoading = false;
 
+  void swapCurrencies() {
+    final temp = fromCurrency;
+    fromCurrency = toCurrency;
+    toCurrency = temp;
+    notifyListeners();
+    convert();
+  }
+
+  void convertCurrency(dynamic amount) {
+      amount = double.parse(amount);
+      convert();
+  }
   CurrencyViewModel(this.repository);
 
   Future<void> loadCurrencies() async {
@@ -43,3 +55,4 @@ class CurrencyViewModel extends ChangeNotifier {
     }
   }
 }
+
